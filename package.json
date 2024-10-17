@@ -1,8 +1,8 @@
 {
-  "name": "my-module",
+  "name": "nuxt-vue-to-pdf",
   "version": "1.0.0",
   "description": "My new Nuxt module",
-  "repository": "your-org/my-module",
+  "repository": "loiaconof/nuxt-vue-to-pdf",
   "license": "MIT",
   "type": "module",
   "exports": {
