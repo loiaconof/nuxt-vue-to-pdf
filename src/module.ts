@@ -5,7 +5,7 @@ export type * from './types'
 
 // Module options TypeScript interface definition
 export interface ModuleOptions {
-  
+
 }
 
 export default defineNuxtModule<ModuleOptions>({

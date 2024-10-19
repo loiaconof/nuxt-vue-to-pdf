@@ -2,7 +2,7 @@ import { defu } from 'defu'
 import puppeteer, { type PDFOptions, type PuppeteerLaunchOptions } from 'puppeteer'
 import { type Component, createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
-import type { H3Event } from 'h3';
+import type { H3Event } from 'h3'
 import { createError } from '#imports'
 import type { VueToPdfOptions } from '~/src/types'
 

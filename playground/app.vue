@@ -3,13 +3,19 @@
     Nuxt module playground!
     <hr>
     loading pdf: {{ loadingSimplePdf }}
-    <button @click="downloadSimplePdf('/pdf/test/simple')">Download Simple Pdf</button>
+    <button @click="downloadSimplePdf('/pdf/test/simple')">
+      Download Simple Pdf
+    </button>
     <hr>
     loading pdf: {{ loadingBasicPdf }}
-    <button @click="downloadBasicPdf('/pdf/test/basic')">Download Basic Pdf</button>
+    <button @click="downloadBasicPdf('/pdf/test/basic')">
+      Download Basic Pdf
+    </button>
     <hr>
     loading pdf: {{ loadingApiPdf }}
-    <button @click="downloadApiPdf('/pdf/test/api')">Download Api Pdf</button>
+    <button @click="downloadApiPdf('/pdf/test/api')">
+      Download Api Pdf
+    </button>
   </div>
 </template>
 

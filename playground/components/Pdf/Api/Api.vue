@@ -15,5 +15,8 @@ const rows = users.map(user => ({
 
 <template>
   <Header />
-  <SimpleTable :columns :rows />
+  <SimpleTable
+    :columns
+    :rows
+  />
 </template>
