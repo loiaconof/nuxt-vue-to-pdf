@@ -16,7 +16,7 @@ const defaultPdfOptions: PDFOptions = {
   printBackground: true,
 }
 
-export async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: VueToPdfOptions) {
+export async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: Partial<VueToPdfOptions>) {
   const mergedLaunchOptions = defu(options?.puppeteerLaunchOptions ?? {}, defaultPuppeteerLaunchOptions)
   const mergedPdfOptions = defu(options?.pdfOptions ?? {}, defaultPdfOptions)
 
