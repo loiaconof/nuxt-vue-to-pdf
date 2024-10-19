@@ -1,10 +1,11 @@
 import { defineNuxtModule, addPlugin, createResolver, addServerImportsDir, addImports } from '@nuxt/kit'
+import PluginVue from '@vitejs/plugin-vue'
 
 export type * from './types'
 
 // Module options TypeScript interface definition
 export interface ModuleOptions {
-  
+
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -21,5 +22,16 @@ export default defineNuxtModule<ModuleOptions>({
     addPlugin(resolver.resolve('./runtime/plugin'))
     addImports({ name: 'useVueToPdf', as: 'useVueToPdf', from: resolver.resolve('./runtime/composables/vue-to-pdf') })
     addServerImportsDir(resolver.resolve('./runtime/server/utils'))
+
+    _nuxt.hook('nitro:config', async (nitroConfig) => {
+      nitroConfig.rollupConfig ||= {}
+      nitroConfig.rollupConfig.plugins ||= []
+      if (Array.isArray(nitroConfig.rollupConfig.plugins)) {
+        (nitroConfig.rollupConfig.plugins as unknown[]).unshift(PluginVue())
+      }
+      else {
+        throw new TypeError('Expected nitroConfig.rollupConfig.plugins to be an array.')
+      }
+    })
   },
 })
