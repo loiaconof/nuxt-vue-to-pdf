@@ -2,7 +2,7 @@
 import Header from '~/components/Pdf/Api/childrean/Header.vue'
 import SimpleTable from '~/components/Table/SimpleTable.vue'
 
-const users = await $fetch<{ [key: string]: any }[]>('https://jsonplaceholder.typicode.com/users')
+const users = await $fetch<{ [key: string ]: string | number | { [key: string ]: string } }[]>('https://jsonplaceholder.typicode.com/users')
 
 const columns = ['Name', 'Username', 'Email', 'Website']
 const rows = users.map(user => ({

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   columns: string[]
-  rows: { [key: string ]: any }[]
+  rows: { [key: string ]: string | number | { [key: string ]: string } }[]
 }>()
 </script>
 
