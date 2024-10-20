@@ -5,7 +5,8 @@ export interface VueToPdfOptions {
   pdfOptions?: PDFOptions
   css: {
     external: {
-      cdns: string | string[]
+      cdns: string[]
     }
+    local: string[]
   }
 }
