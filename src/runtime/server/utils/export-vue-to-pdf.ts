@@ -1,8 +1,9 @@
 import { defu } from 'defu'
-import puppeteer, { type PDFOptions, type PuppeteerLaunchOptions } from 'puppeteer'
+import puppeteer from 'puppeteer'
 import { type Component, createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import type { H3Event } from 'h3'
+import { processLocalCss } from './process-local-css'
 import { createError, useRuntimeConfig } from '#imports'
 import type { VueToPdfOptions } from '~/src/types'
 
@@ -17,8 +18,9 @@ const defaultOptions: VueToPdfOptions = {
   },
   css: {
     external: {
-      cdns: '',
+      cdns: [],
     },
+    local: [],
   },
 }
 
@@ -32,12 +34,14 @@ export async function exportVueToPdf(event: H3Event, filename: string, component
   })
 
   const renderedContent = await renderToString(app)
+  const localCss = await processLocalCss(_options.css.local)
 
   const html = `
   <!DOCTYPE html>
   <html>
     <header>
-      ${Array.isArray(_options.css.external.cdns) ? (_options.css.external.cdns as string[]).join() : _options.css.external.cdns}
+      ${_options.css.external.cdns.join()}
+      <style>${localCss}</style>
     </header>
     <body>
       <div id="app">${renderedContent}</div>
