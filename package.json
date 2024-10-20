@@ -1,8 +1,8 @@
 {
-  "name": "my-module",
+  "name": "nuxt-vue-to-pdf",
   "version": "1.0.0",
   "description": "My new Nuxt module",
-  "repository": "your-org/my-module",
+  "repository": "loiaconof/nuxt-vue-to-pdf",
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -29,7 +29,12 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.13.2"
+    "@nuxt/kit": "^3.13.2",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "defu": "^6.1.4",
+    "postcss": "^8.4.47",
+    "postcss-import": "^16.1.0",
+    "puppeteer": "^23.6.0"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.5.0",
