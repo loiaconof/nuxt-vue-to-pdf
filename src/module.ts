@@ -6,7 +6,7 @@ import type { VueToPdfOptions } from '~/src/types'
 export type * from './types'
 
 // Module options TypeScript interface definition
-export interface ModuleOptions extends VueToPdfOptions {}
+export type ModuleOptions = VueToPdfOptions
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
