@@ -7,12 +7,13 @@ defineProps<{
 
 <template>
   <div>
-    <table>
+    <table class="table-auto border-collapse border border-slate-500 w-7/8 mx-3">
       <thead>
         <tr>
           <th
             v-for="(value, index) in columns"
             :key="index"
+            class="border border-slate-600"
           >
             {{ value }}
           </th>
@@ -26,6 +27,7 @@ defineProps<{
           <td
             v-for="(value, idx) in Object.values(row)"
             :key="`${index}-${idx}`"
+            class="border border-slate-700"
           >
             {{ value }}
           </td>
