@@ -6,19 +6,24 @@ import type { H3Event } from 'h3'
 import { createError, useRuntimeConfig } from '#imports'
 import type { VueToPdfOptions } from '~/src/types'
 
-const defaultPuppeteerLaunchOptions: PuppeteerLaunchOptions = {
-  headless: true,
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
-}
-
-const defaultPdfOptions: PDFOptions = {
-  format: 'A4',
-  printBackground: true,
+const defaultOptions: VueToPdfOptions = {
+  pdfOptions: {
+    format: 'A4',
+    printBackground: true,
+  },
+  puppeteerLaunchOptions: {
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  },
+  css: {
+    external: {
+      cdns: '',
+    },
+  },
 }
 
 export async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: Partial<VueToPdfOptions>) {
-  const mergedLaunchOptions = defu(options?.puppeteerLaunchOptions ?? {}, useRuntimeConfig().nuxtVueToPdf?.puppeteerLaunchOptions ?? {}, defaultPuppeteerLaunchOptions)
-  const mergedPdfOptions = defu(options?.pdfOptions ?? {}, useRuntimeConfig().nuxtVueToPdf?.pdfOptions ?? {}, defaultPdfOptions)
+  const _options = defu(options, useRuntimeConfig().nuxtVueToPdf, defaultOptions) as VueToPdfOptions
 
   const app = createSSRApp({
     render() {
@@ -32,6 +37,7 @@ export async function exportVueToPdf(event: H3Event, filename: string, component
   <!DOCTYPE html>
   <html>
     <header>
+      ${Array.isArray(_options.css.external.cdns) ? (_options.css.external.cdns as string[]).join() : _options.css.external.cdns}
     </header>
     <body>
       <div id="app">${renderedContent}</div>
@@ -40,11 +46,11 @@ export async function exportVueToPdf(event: H3Event, filename: string, component
 
   let browser
   try {
-    browser = await puppeteer.launch(mergedLaunchOptions)
+    browser = await puppeteer.launch(_options.puppeteerLaunchOptions)
     const page = await browser.newPage()
     await page.setContent(html, { waitUntil: 'networkidle0' })
 
-    const pdfBuffer = await page.pdf(mergedPdfOptions)
+    const pdfBuffer = await page.pdf(_options.pdfOptions)
 
     event.node.res.setHeader('Content-Type', 'application/pdf')
     event.node.res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
