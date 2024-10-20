@@ -3,7 +3,7 @@ import puppeteer, { type PDFOptions, type PuppeteerLaunchOptions } from 'puppete
 import { type Component, createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import type { H3Event } from 'h3'
-import { createError } from '#imports'
+import { createError, useRuntimeConfig } from '#imports'
 import type { VueToPdfOptions } from '~/src/types'
 
 const defaultPuppeteerLaunchOptions: PuppeteerLaunchOptions = {
@@ -16,9 +16,9 @@ const defaultPdfOptions: PDFOptions = {
   printBackground: true,
 }
 
-export async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: VueToPdfOptions) {
-  const mergedLaunchOptions = defu(options?.puppeteerLaunchOptions ?? {}, defaultPuppeteerLaunchOptions)
-  const mergedPdfOptions = defu(options?.pdfOptions ?? {}, defaultPdfOptions)
+export async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: Partial<VueToPdfOptions>) {
+  const mergedLaunchOptions = defu(options?.puppeteerLaunchOptions ?? {}, useRuntimeConfig().nuxtVueToPdf?.puppeteerLaunchOptions ?? {}, defaultPuppeteerLaunchOptions)
+  const mergedPdfOptions = defu(options?.pdfOptions ?? {}, useRuntimeConfig().nuxtVueToPdf?.pdfOptions ?? {}, defaultPdfOptions)
 
   const app = createSSRApp({
     render() {

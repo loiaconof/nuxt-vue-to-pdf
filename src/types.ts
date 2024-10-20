@@ -1,6 +1,6 @@
 import type { PDFOptions, PuppeteerLaunchOptions } from 'puppeteer'
 
-export type VueToPdfOptions = Partial<{
+export interface VueToPdfOptions {
   puppeteerLaunchOptions?: PuppeteerLaunchOptions
   pdfOptions?: PDFOptions
-}>
+}
