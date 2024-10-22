@@ -9,4 +9,8 @@ export interface VueToPdfOptions {
     }
     local: string[]
   }
+  component: {
+    forwardRequest: boolean
+    props: { [key: string]: unknown }
+  }
 }

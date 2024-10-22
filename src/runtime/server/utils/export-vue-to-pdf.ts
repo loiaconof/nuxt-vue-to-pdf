@@ -4,7 +4,7 @@ import { type Component, createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import type { H3Event } from 'h3'
 import { processLocalCss } from './process-local-css'
-import { createError, useRuntimeConfig } from '#imports'
+import { createError, getQuery, readBody, useRuntimeConfig } from '#imports'
 import type { VueToPdfOptions } from '~/src/types'
 
 const defaultOptions: VueToPdfOptions = {
@@ -22,14 +22,24 @@ const defaultOptions: VueToPdfOptions = {
     },
     local: [],
   },
+  component: {
+    forwardRequest: true,
+    props: {},
+  },
 }
 
 export async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: Partial<VueToPdfOptions>) {
   const _options = defu(options, useRuntimeConfig().nuxtVueToPdf, defaultOptions) as VueToPdfOptions
 
+  if (_options.component.forwardRequest) {
+    _options.component.props.header = event.node.req.headers
+    _options.component.props.query = getQuery(event)
+    _options.component.props.header = await readBody(event)
+  }
+
   const app = createSSRApp({
     render() {
-      return h(component)
+      return h(component, { ..._options.component.props })
     },
   })
 
