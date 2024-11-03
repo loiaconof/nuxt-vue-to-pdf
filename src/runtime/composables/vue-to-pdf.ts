@@ -1,14 +1,18 @@
+import defu from 'defu'
 import { ref } from 'vue'
 
 export function useVueToPdf() {
   const loading = ref(false)
   const error = ref(undefined)
 
-  async function download(url: string) {
+  async function download(url: string, options?: Partial<FetchOptions<'blob'>>) {
     loading.value = true
     error.value = undefined
+    const defaultOptions = { responseType: 'blob' }
+    const _options = defu(options ?? {}, defaultOptions) as Partial<FetchOptions<'blob'>>
+
     try {
-      const response = await $fetch.raw<FetchResponse<Blob>>(url)
+      const response = await $fetch.raw<FetchResponse<Blob>>(url, { ..._options })
       downloadBlob(response._data, getResponseFilename(response))
     }
     catch (err: any) {
