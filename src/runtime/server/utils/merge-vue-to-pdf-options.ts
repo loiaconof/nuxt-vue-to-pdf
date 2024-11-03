@@ -32,10 +32,10 @@ export async function mergeVueToPdfOptions(event: H3Event, options?: Partial<Vue
 
   const { props } = _options.component
 
-  if (props?.header) {
-    console.warn(`options.component.props.header will be overwritten due to forwardRequest flag`)
+  if (props?.headers) {
+    console.warn(`options.component.props.headers will be overwritten due to forwardRequest flag`)
   }
-  props.header = event.node.req.headers
+  props.headers = event.node.req.headers
 
   if (props?.query) {
     console.warn(`options.component.props.query will be overwritten due to forwardRequest flag`)
