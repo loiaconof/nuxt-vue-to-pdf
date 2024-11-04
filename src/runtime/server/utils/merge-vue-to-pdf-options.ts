@@ -1,5 +1,5 @@
 import defu from 'defu'
-import { type H3Event } from 'h3'
+import type { H3Event } from 'h3'
 import type { VueToPdfOptions } from '~/src/types'
 import { getQuery, readBody, useRuntimeConfig } from '#imports'
 
