@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer'
 import { type Component, createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
-import { type H3Event } from 'h3'
+import type { H3Event } from 'h3'
 import { processLocalCss } from './process-local-css'
 import { mergeVueToPdfOptions } from './merge-vue-to-pdf-options'
 import { createError } from '#imports'
