@@ -8,7 +8,7 @@ import { createError } from '#imports'
 import type { VueToPdfOptions } from '~/src/types'
 
 export async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: Partial<VueToPdfOptions>) {
-  const _options = await mergeVueToPdfOptions(event, options)
+  const _options = mergeVueToPdfOptions(event, options)
 
   const app = createSSRApp({
     render() {

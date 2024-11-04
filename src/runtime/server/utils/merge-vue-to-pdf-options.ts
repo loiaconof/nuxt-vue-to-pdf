@@ -1,9 +1,9 @@
 import defu from 'defu'
 import type { H3Event } from 'h3'
 import type { VueToPdfOptions } from '~/src/types'
-import { getQuery, readBody, useRuntimeConfig } from '#imports'
+import { getQuery, useRuntimeConfig } from '#imports'
 
-export async function mergeVueToPdfOptions(event: H3Event, options?: Partial<VueToPdfOptions>): VueToPdfOptions {
+export function mergeVueToPdfOptions(event: H3Event, options?: Partial<VueToPdfOptions>): VueToPdfOptions {
   const defaultOptions: Readonly<VueToPdfOptions> = {
     pdfOptions: {
       format: 'A4',
@@ -41,11 +41,6 @@ export async function mergeVueToPdfOptions(event: H3Event, options?: Partial<Vue
     console.warn(`options.component.props.query will be overwritten due to forwardRequest flag`)
   }
   props.query = getQuery(event)
-
-  if (props?.body) {
-    console.warn(`options.component.props.body will be overwritten due to forwardRequest flag`)
-  }
-  props.body = event.node.req.method !== 'GET' ? await readBody(event) : undefined
 
   return _options
 }
