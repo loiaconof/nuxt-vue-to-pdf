@@ -13,9 +13,5 @@ export default defineEventHandler(async (event) => {
     },
   }
 
-  console.log(getQuery(event))
-
-
-  
   return await exportVueToPdf(event, 'forward-request.pdf', Pdf, options)
 })
