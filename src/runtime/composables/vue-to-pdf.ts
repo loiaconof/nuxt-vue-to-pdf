@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 export function useVueToPdf() {
   const loading = ref(false)
-  const error = ref(undefined)
+  const error = ref<Error | undefined>(undefined)
 
   async function download(url: string, options?: Partial<FetchOptions<'blob'>>) {
     loading.value = true
@@ -15,8 +15,8 @@ export function useVueToPdf() {
       const response = await $fetch.raw<FetchResponse<Blob>>(url, { ..._options })
       downloadBlob(response._data, getResponseFilename(response))
     }
-    catch (err: any) {
-      error.value = err
+    catch (err: unknown) {
+      error.value = err instanceof Error ? err : new Error('Unknown error.')
     }
     finally {
       loading.value = false
