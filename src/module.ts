@@ -5,10 +5,7 @@ import type { VueToPdfOptions } from '~/src/types'
 
 export type * from './types'
 
-// Module options TypeScript interface definition
-export type ModuleOptions = VueToPdfOptions
-
-export default defineNuxtModule<ModuleOptions>({
+export default defineNuxtModule<VueToPdfOptions>({
   meta: {
     name: 'nuxt-vue-to-pdf',
     configKey: 'nuxtVueToPdf',

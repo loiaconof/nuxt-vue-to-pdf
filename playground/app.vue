@@ -13,8 +13,13 @@
     </button>
     <hr>
     loading pdf: {{ loadingApiPdf }}
-    <button @click="downloadApiPdf('/pdf/test/api')">
+    <button @click="downloadApiPdf('/pdf/test/api', { headers: { Authorization: `Bearer ${apiAuthToken}` } })">
       Download Api Pdf
+    </button>
+    <hr>
+    loading pdf: {{ loadingForwardRequestPdf }}
+    <button @click="downloadForwardRequestPdf('/pdf/test/forward-request', { query: { title: 'Forwarding Request Title' } })">
+      Download Forward Request Pdf
     </button>
   </div>
 </template>
@@ -23,4 +28,7 @@
 const { loading: loadingSimplePdf, download: downloadSimplePdf } = useVueToPdf()
 const { loading: loadingBasicPdf, download: downloadBasicPdf } = useVueToPdf()
 const { loading: loadingApiPdf, download: downloadApiPdf } = useVueToPdf()
+const { loading: loadingForwardRequestPdf, download: downloadForwardRequestPdf } = useVueToPdf()
+
+const apiAuthToken = 'MY_AUTH_TOKEN'
 </script>

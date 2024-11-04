@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import Header from '~/components/Pdf/Api/childrean/Header.vue'
+import Header from '~/components/Pdf/ForwardRequest/childrean/Header.vue'
 import SimpleTable from '~/components/Table/SimpleTable.vue'
 
 const props = defineProps<{
-  headers: object
+  query: { title: string }
+  users: { [key: string ]: string | number | { [key: string ]: string } }[]
 }>()
-const users = await $fetch<{ [key: string ]: string | number | { [key: string ]: string } }[]>('https://jsonplaceholder.typicode.com/users', { headers: { Authorization: props.headers.authorization } })
 
 const columns = ['Name', 'Username', 'Email', 'Website']
-const rows = users.map(user => ({
+const rows = props.users.map(user => ({
   name: user.name,
   username: user.username,
   email: user.email,
@@ -17,7 +17,7 @@ const rows = users.map(user => ({
 </script>
 
 <template>
-  <Header />
+  <Header :title="query.title" />
   <SimpleTable
     :columns
     :rows
