@@ -1,84 +1,68 @@
-<!--
-Get your module up and running quickly.
+# Nuxt Vue To Pdf
 
-Find and replace all on all files (CMD+SHIFT+F):
-- Name: My Module
-- Package name: my-module
-- Description: My new Nuxt module
--->
 
-# My Module
-
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![License][license-src]][license-href]
-[![Nuxt][nuxt-src]][nuxt-href]
-
-My new Nuxt module for doing amazing things.
-
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-<!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/my-module?file=playground%2Fapp.vue) -->
-<!-- - [📖 &nbsp;Documentation](https://example.com) -->
 
 ## Features
 
 <!-- Highlight some of the features your module provide here -->
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
+- Nuxt 3 ready
+- Vue 3 composables
 
 ## Quick Setup
 
-Install the module to your Nuxt application with one command:
+Install the module:
 
-```bash
-npx nuxi module add my-module
+```sh
+npx nuxi@latest module add nuxt-vue-to-pdf
 ```
 
-That's it! You can now use My Module in your Nuxt app ✨
+And that's it! The module will now register route rules and server middlewares globally so that your application will be more secured.
 
+## Configuration
 
-## Contribution
+You can pass configuration to the module in the `nuxt.config.ts` like following:
 
-<details>
-  <summary>Local development</summary>
-  
-  ```bash
-  # Install dependencies
-  npm install
-  
-  # Generate type stubs
-  npm run dev:prepare
-  
-  # Develop with the playground
-  npm run dev
-  
-  # Build the playground
-  npm run dev:build
-  
-  # Run ESLint
-  npm run lint
-  
-  # Run Vitest
-  npm run test
-  npm run test:watch
-  
-  # Release new version
-  npm run release
-  ```
+```ts
+export default defineNuxtConfig({
+  modules: ["nuxt-vue-to-pdf"],
+  // ...
+  runtimeConfig: {
+    nuxtVueToPdf: {
+      // Partial<VueToPdfOptions>
+    },
+  },
+})
+```
 
-</details>
+**TypeScript Signature:**
 
+```ts
+interface VueToPdfOptions {
+  puppeteerLaunchOptions?: PuppeteerLaunchOptions // can be overridden by NUXT_PUPPETEER_LAUNCH_OPTIONS_{OPTION} environment variable
+  pdfOptions?: PDFOptions // can be overridden by NUXT_PDF_OPTIONS_{OPTION} environment variable
+  css: {
+    external: {
+      cdns: string[] // can be overridden by NUXT_CSS_EXTERNAL_CDNS environment variable
+    }
+    local: string[] // can be overridden by NUXT_CSS_LOCAL environment variable
+  }
+}
+```
 
-<!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/my-module/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/my-module
+## Server Utils
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npmjs.com/package/my-module
+The following helpers are auto-imported in your `server/` directory.
 
-[license-src]: https://img.shields.io/npm/l/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/my-module
+```ts
+async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: Partial<VueToPdfOptions>): Promise<Uint8Array<ArrayBufferLike> | undefined>
+```
 
-[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
-[nuxt-href]: https://nuxt.com
+> ⚠️ **Warning: Side Effect on Response Headers**
+>
+> The `exportVueToPdf` function modifies the headers of the HTTP response. Specifically, it sets the following headers:
+>
+> - `Content-Type: application/pdf`
+> - `Content-Disposition: attachment; filename="<filename>"`
+> - `Content-Length: <pdfBuffer.length>`
+>
+> These headers are automatically applied to the response object, which may affect other parts of the request handling process. Make sure this behavior is expected or handle potential conflicts in downstream code.
