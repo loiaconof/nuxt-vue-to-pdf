@@ -1,5 +1,6 @@
 import { defineNuxtModule, addPlugin, createResolver, addServerImportsDir, addImports } from '@nuxt/kit'
 import PluginVue from '@vitejs/plugin-vue'
+import postcss from 'rollup-plugin-postcss'
 import defu from 'defu'
 import type { VueToPdfOptions } from '~/src/types'
 
@@ -27,8 +28,10 @@ export default defineNuxtModule<VueToPdfOptions>({
     _nuxt.hook('nitro:config', async (nitroConfig) => {
       nitroConfig.rollupConfig ||= {}
       nitroConfig.rollupConfig.plugins ||= []
+
       if (Array.isArray(nitroConfig.rollupConfig.plugins)) {
-        (nitroConfig.rollupConfig.plugins as unknown[]).unshift(PluginVue())
+        nitroConfig.rollupConfig.plugins.push(PluginVue())
+        nitroConfig.rollupConfig.plugins.push(postcss())
       }
       else {
         throw new TypeError('Expected nitroConfig.rollupConfig.plugins to be an array.')
