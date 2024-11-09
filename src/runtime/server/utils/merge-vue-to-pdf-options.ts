@@ -25,7 +25,10 @@ export function mergeVueToPdfOptions(event: H3Event, options?: Partial<VueToPdfO
     },
   }
 
-  const _options = defu(options, useRuntimeConfig().nuxtVueToPdf, defaultOptions) as VueToPdfOptions
+  const _runtimeConfig = Object.fromEntries(
+    Object.entries(useRuntimeConfig().nuxtVueToPdf).filter(([_, value]) => value !== '' && value !== null && value !== undefined),
+  )
+  const _options = defu(options, _runtimeConfig, defaultOptions) as VueToPdfOptions
 
   if (!_options.component.forwardRequest)
     return _options
