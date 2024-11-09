@@ -1,35 +1,17 @@
-import { defu } from 'defu'
 import puppeteer from 'puppeteer'
 import { type Component, createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import type { H3Event } from 'h3'
 import { processLocalCss } from './process-local-css'
-import { createError, useRuntimeConfig } from '#imports'
+import { mergeVueToPdfOptions } from './merge-vue-to-pdf-options'
 import type { VueToPdfOptions } from '~/src/types'
 
-const defaultOptions: VueToPdfOptions = {
-  pdfOptions: {
-    format: 'A4',
-    printBackground: true,
-  },
-  puppeteerLaunchOptions: {
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  },
-  css: {
-    external: {
-      cdns: [],
-    },
-    local: [],
-  },
-}
-
 export async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: Partial<VueToPdfOptions>) {
-  const _options = defu(options, useRuntimeConfig().nuxtVueToPdf, defaultOptions) as VueToPdfOptions
+  const _options = mergeVueToPdfOptions(event, options)
 
   const app = createSSRApp({
     render() {
-      return h(component)
+      return h(component, { ..._options.component.props })
     },
   })
 
@@ -48,28 +30,19 @@ export async function exportVueToPdf(event: H3Event, filename: string, component
     </body>
   </html>`
 
-  let browser
-  try {
-    browser = await puppeteer.launch(_options.puppeteerLaunchOptions)
-    const page = await browser.newPage()
-    await page.setContent(html, { waitUntil: 'networkidle0' })
+  const browser = await puppeteer.launch(_options.puppeteerLaunchOptions)
 
-    const pdfBuffer = await page.pdf(_options.pdfOptions)
+  const page = await browser.newPage()
 
-    event.node.res.setHeader('Content-Type', 'application/pdf')
-    event.node.res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
-    event.node.res.setHeader('Content-Length', pdfBuffer.length)
+  await page.setContent(html, { waitUntil: 'networkidle0' })
 
-    return pdfBuffer
-  }
-  catch (error) {
-    createError({
-      statusCode: 500,
-      statusMessage: JSON.stringify(error),
-    })
-  }
-  finally {
-    if (browser)
-      await browser.close()
-  }
+  const pdfBuffer = await page.pdf(_options.pdfOptions)
+
+  await browser.close()
+
+  event.node.res.setHeader('Content-Type', 'application/pdf')
+  event.node.res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
+  event.node.res.setHeader('Content-Length', pdfBuffer.length)
+
+  return pdfBuffer
 }
