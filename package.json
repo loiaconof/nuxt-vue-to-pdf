@@ -1,6 +1,6 @@
 {
   "name": "nuxt-vue-to-pdf",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "My new Nuxt module",
   "repository": "loiaconof/nuxt-vue-to-pdf",
   "license": "MIT",
@@ -26,7 +26,11 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "docker:build": "docker build . -t nuxt-vue-to-pdf",
+    "docker:run": "docker run --rm -p 8082:80 -t nuxt-vue-to-pdf:latest",
+    "docker:run:it": "docker run --rm -p 8082:80 -it -t nuxt-vue-to-pdf:latest /bin/sh",
+    "docker:up": "npm run docker:build && npm run docker:run"
   },
   "dependencies": {
     "@nuxt/kit": "^3.14.0",

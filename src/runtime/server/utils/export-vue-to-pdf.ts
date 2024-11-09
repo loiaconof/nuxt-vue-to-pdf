@@ -4,7 +4,6 @@ import { renderToString } from 'vue/server-renderer'
 import type { H3Event } from 'h3'
 import { processLocalCss } from './process-local-css'
 import { mergeVueToPdfOptions } from './merge-vue-to-pdf-options'
-import { createError } from '#imports'
 import type { VueToPdfOptions } from '~/src/types'
 
 export async function exportVueToPdf(event: H3Event, filename: string, component: Component, options?: Partial<VueToPdfOptions>) {
@@ -31,30 +30,19 @@ export async function exportVueToPdf(event: H3Event, filename: string, component
     </body>
   </html>`
 
-  let browser
-  try {
-    browser = await puppeteer.launch(_options.puppeteerLaunchOptions)
+  const browser = await puppeteer.launch(_options.puppeteerLaunchOptions)
 
-    const page = await browser.newPage()
+  const page = await browser.newPage()
 
-    await page.setContent(html, { waitUntil: 'networkidle0' })
+  await page.setContent(html, { waitUntil: 'networkidle0' })
 
-    const pdfBuffer = await page.pdf(_options.pdfOptions)
+  const pdfBuffer = await page.pdf(_options.pdfOptions)
 
-    event.node.res.setHeader('Content-Type', 'application/pdf')
-    event.node.res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
-    event.node.res.setHeader('Content-Length', pdfBuffer.length)
+  await browser.close()
 
-    return pdfBuffer
-  }
-  catch (error) {
-    createError({
-      statusCode: 500,
-      statusMessage: JSON.stringify(error),
-    })
-  }
-  finally {
-    if (browser)
-      await browser.close()
-  }
+  event.node.res.setHeader('Content-Type', 'application/pdf')
+  event.node.res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
+  event.node.res.setHeader('Content-Length', pdfBuffer.length)
+
+  return pdfBuffer
 }
